@@ -1,0 +1,88 @@
+spring:
+  application:
+    name: city-service
+
+  config:
+    # Local developer overrides (git-ignored). Missing file is fine in production.
+    import: "optional:file:./application-local.yml"
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:sehir_xidmetleri}
+    username: ${DB_USER:postgres}
+    # No default on purpose: secrets are never stored in version control.
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    # Flyway owns the schema. Hibernate only validates it.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 30
+          time_zone: UTC
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  jackson:
+    default-property-inclusion: non_null
+    # Jackson 3 keeps java.time values as ISO-8601 strings; keep it explicit for the API contract.
+    datetime:
+      write-dates-as-timestamps: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+  mvc:
+    problemdetails:
+      enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+city:
+  security:
+    jwt:
+      # HS256 requires at least a 256-bit key. Always supplied from outside the repository.
+      secret: ${JWT_SECRET}
+      issuer: ${JWT_ISSUER:https://api.city.gov.az}
+      expiration-minutes: ${JWT_EXPIRATION_MINUTES:180}
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:4173}
+  storage:
+    upload-dir: ${UPLOAD_DIR:./uploads}
+    max-image-size-bytes: 5242880
+    allowed-image-types: image/jpeg,image/png,image/webp,image/gif
+  bootstrap:
+    enabled: ${BOOTSTRAP_ENABLED:true}
+    admin:
+      username: ${BOOTSTRAP_ADMIN_USERNAME:admin}
+      # Required: the very first admin password is never stored in the repository.
+      password: ${BOOTSTRAP_ADMIN_PASSWORD}
+      email: ${BOOTSTRAP_ADMIN_EMAIL:admin@city.gov.az}
+    seed-categories: ${SEED_CATEGORIES:true}
+
+logging:
+  level:
+    root: INFO
+    com.example.cityservice: INFO
+    org.flywaydb: INFO

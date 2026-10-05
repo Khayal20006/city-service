@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${TEST_DB_NAME:sehir_xidmetleri_test}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:mysecretpassword}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+
+  flyway:
+    enabled: true
+    clean-disabled: false
+    locations: classpath:db/migration
+
+  task:
+    execution:
+      pool:
+        core-size: 2
+
+logging:
+  level:
+    root: WARN
+    com.example.cityservice: INFO
+    org.flywaydb: WARN
+
+city:
+  security:
+    jwt:
+      secret: test-secret-key-that-is-definitely-long-enough-for-hs256!!
+      issuer: https://api.city.gov.az
+      expiration-minutes: 30
+  cors:
+    allowed-origins: http://localhost:5173
+  storage:
+    upload-dir: ./target/test-uploads
+    max-image-size-bytes: 1048576
+    allowed-image-types: image/jpeg,image/png
+  bootstrap:
+    admin:
+      username: admin
+      password: Admin123!
+      email: admin@city.gov.az
+    seed-categories: true
