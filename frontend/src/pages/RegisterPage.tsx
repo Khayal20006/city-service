@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ApiError } from '../lib/api'
-import { Alert, Button, Card, Field } from '../components/ui'
+import AuthShell from '../components/AuthShell'
+import { Alert, Button, Field } from '../components/ui'
 
 export default function RegisterPage() {
   const { register, user } = useAuth()
@@ -53,40 +54,35 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md py-6">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Hesab yaradın</h1>
-        <p className="mt-1.5 text-sm text-slate-500">
-          Şikayət vermək və həllini izləmək üçün pulsuz hesab yaradın
-        </p>
-      </div>
+    <AuthShell
+      kicker="Qeydiyyat"
+      title="Pulsuz hesab yaradın"
+      subtitle="Ad və telefon isteğe bağlıdır — istifadəçi adı və parolla başlayın."
+      footer={
+        <>
+          Artıq hesabınız var?{' '}
+          <Link to="/login" className="font-semibold text-brand-700 hover:text-brand-800">
+            Daxil olun
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <Alert tone="error">
+            <p>{error}</p>
+            {details.length > 0 && (
+              <ul className="mt-1.5 list-disc space-y-0.5 pl-4 text-xs">
+                {details.map((detail) => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            )}
+          </Alert>
+        )}
 
-      <Card className="p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <Alert tone="error">
-              <p>{error}</p>
-              {details.length > 0 && (
-                <ul className="mt-1.5 list-disc space-y-0.5 pl-4 text-xs">
-                  {details.map((detail) => (
-                    <li key={detail}>{detail}</li>
-                  ))}
-                </ul>
-              )}
-            </Alert>
-          )}
-
-          <Field label="Ad, soyad" hint="Nəzərdə tutulmur, amma idarə ilə əlaqə üçün faydalıdır">
-            <input
-              className="field-input"
-              value={form.fullName}
-              onChange={(event) => update('fullName', event.target.value)}
-              autoComplete="name"
-              placeholder="Aysel Məmmədova"
-            />
-          </Field>
-
-          <Field label="İstifadəçi adı" hint="3-50 simvol: hərf, rəqəm, . _ -">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="İstifadəçi adı" hint="Hərf, rəqəm, . _ -">
             <input
               className="field-input"
               value={form.username}
@@ -97,28 +93,30 @@ export default function RegisterPage() {
             />
           </Field>
 
-          <Field label="Email">
-            <input
-              type="email"
-              className="field-input"
-              value={form.email}
-              onChange={(event) => update('email', event.target.value)}
-              autoComplete="email"
-              required
-              placeholder="aysel@example.az"
-            />
-          </Field>
-
-          <Field label="Telefon" hint="İstəyə bağlı, maksimum 20 simvol">
+          <Field label="Ad, soyad" hint="Ola şərti">
             <input
               className="field-input"
-              value={form.phoneNumber}
-              onChange={(event) => update('phoneNumber', event.target.value)}
-              autoComplete="tel"
-              placeholder="+994 50 123 45 67"
+              value={form.fullName}
+              onChange={(event) => update('fullName', event.target.value)}
+              autoComplete="name"
+              placeholder="Aysel Məmmədova"
             />
           </Field>
+        </div>
 
+        <Field label="Email">
+          <input
+            type="email"
+            className="field-input"
+            value={form.email}
+            onChange={(event) => update('email', event.target.value)}
+            autoComplete="email"
+            required
+            placeholder="aysel@example.az"
+          />
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Parol" hint="Ən azı 8 simvol">
             <input
               type="password"
@@ -132,18 +130,22 @@ export default function RegisterPage() {
             />
           </Field>
 
-          <Button type="submit" size="lg" fullWidth loading={submitting}>
-            Hesab yarat
-          </Button>
-        </form>
+          <Field label="Telefon" hint="İsteğe bağlı, max 20 simvol">
+            <input
+              className="field-input"
+              value={form.phoneNumber}
+              onChange={(event) => update('phoneNumber', event.target.value)}
+              autoComplete="tel"
+              placeholder="+994 50 123 45 67"
+            />
+          </Field>
+        </div>
 
-        <p className="mt-5 border-t border-slate-100 pt-5 text-center text-sm text-slate-500">
-          Artıq hesabınız var?{' '}
-          <Link to="/login" className="font-semibold text-brand-700 hover:underline">
-            Daxil olun
-          </Link>
-        </p>
-      </Card>
-    </div>
+        <Button type="submit" size="lg" fullWidth loading={submitting}>
+          Hesab yarat
+          {!submitting && <span aria-hidden>→</span>}
+        </Button>
+      </form>
+    </AuthShell>
   )
 }

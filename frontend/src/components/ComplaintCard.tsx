@@ -8,14 +8,14 @@ function ComplaintCard({ complaint }: { complaint: Complaint }) {
   return (
     <Link
       to={`/complaints/${complaint.id}`}
-      className="group block rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift"
+      className="group block rounded-2xl border border-ink/8 bg-white p-4 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-[11px] font-semibold tracking-wide text-brand-700">
             {complaint.referenceCode}
           </p>
-          <h3 className="mt-0.5 truncate text-sm font-semibold text-slate-900 group-hover:text-brand-800">
+          <h3 className="display mt-0.5 truncate text-sm text-ink group-hover:text-brand-800">
             {complaint.title}
           </h3>
         </div>

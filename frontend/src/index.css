@@ -3,20 +3,65 @@
 
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
-  --color-brand-50: #eff8ff;
-  --color-brand-100: #dbeefe;
-  --color-brand-200: #bfe2fe;
-  --color-brand-300: #93d0fd;
-  --color-brand-400: #60b5fa;
-  --color-brand-500: #3b96f6;
-  --color-brand-600: #2176ec;
-  --color-brand-700: #1b5ed8;
-  --color-brand-800: #1c4daf;
-  --color-brand-900: #1c428a;
+  --color-paper: #f4f2ec;
+  --color-parchment: #fbfaf6;
+  --color-ink: #221d16;
+  --color-ink-soft: #4a4238;
 
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 18px 40px -16px rgb(15 23 42 / 0.28);
+  --color-brand-50: #faf1ea;
+  --color-brand-100: #f4dfcf;
+  --color-brand-200: #e8bda0;
+  --color-brand-300: #d99c76;
+  --color-brand-400: #cb7a4e;
+  --color-brand-500: #bc5f32;
+  --color-brand-600: #9f4a23;
+  --color-brand-700: #833a1b;
+  --color-brand-800: #652d16;
+  --color-brand-900: #4a2112;
+
+  --shadow-card: 0 1px 2px rgb(34 29 22 / 0.05), 0 16px 40px -24px rgb(34 29 22 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(34 29 22 / 0.04), 0 28px 56px -28px rgb(34 29 22 / 0.3);
+
+  --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.4s ease both;
+  --animate-shimmer: shimmer 1.7s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: -400px 0;
+    }
+    to {
+      background-position: 400px 0;
+    }
+  }
+}
+
+/* Fine dot-grid used on dark panels; reads as a quiet blueprint texture. */
+@utility dot-grid-light {
+  background-image: radial-gradient(rgb(255 255 255 / 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
 @layer base {
@@ -25,37 +70,69 @@
   }
 
   body {
-    @apply bg-slate-50 font-sans text-slate-800 antialiased;
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
   }
 
   :focus-visible {
     @apply outline-brand-500 outline-2 outline-offset-2;
   }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(34 29 22 / 0.25) transparent;
+  }
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+    @apply rounded-xl border border-ink/10 bg-parchment shadow-card;
+  }
+
+  .hairline {
+    @apply border-t border-ink/10;
+  }
+
+  .kicker {
+    @apply font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-600;
   }
 
   .field-label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-sm font-medium text-ink;
   }
 
   .field-input {
-    @apply focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-slate-300
-      bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition
-      placeholder:text-slate-400 focus:ring-2 focus:outline-none;
+    @apply w-full rounded-lg border border-ink/15 bg-white px-3.5 py-2.5 text-sm text-ink transition
+      placeholder:text-ink/35 focus:border-brand-500 focus:ring-brand-500 focus:ring-2 focus:outline-none;
   }
 
   .field-hint {
-    @apply mt-1.5 text-xs text-slate-500;
+    @apply mt-1.5 text-xs text-ink/55;
   }
+
+  .display {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+.shimmer-bar {
+  background: linear-gradient(
+    100deg,
+    rgb(34 29 22 / 0.05) 40%,
+    rgb(34 29 22 / 0.12) 50%,
+    rgb(34 29 22 / 0.05) 60%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.7s linear infinite;
+  border-radius: 0.5rem;
 }
 
 /* Leaflet needs an explicit height and its own font stack to stay inside the theme. */
 .leaflet-container {
-  @apply h-full w-full rounded-2xl bg-slate-100 font-sans;
+  @apply h-full w-full rounded-xl bg-parchment font-sans;
   z-index: 0;
 }
 

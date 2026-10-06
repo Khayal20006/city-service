@@ -2,7 +2,7 @@ import { api } from '../lib/api'
 import { useFetch } from '../hooks/useFetch'
 import { formatHours } from '../lib/format'
 import type { Category } from '../lib/types'
-import { Alert, Badge, Card, PageLoader, SectionTitle } from '../components/ui'
+import { Alert, Badge, Card, SectionTitle, SkeletonCard } from '../components/ui'
 
 export default function CategoriesPage() {
   const { data, loading, error } = useFetch<Category[]>(
@@ -11,46 +11,55 @@ export default function CategoriesPage() {
   )
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <SectionTitle
-        title="Xidmət kateqoriyaları"
-        description="Hər kateqoriya müvafiq şöbəyə yönləndirilir. Təxmini həll müddəti kateqoriyanın idarəsi tərəfindən verilir."
+        kicker="Xidmət sahələri"
+        title="Şikayət kateqoriyaları"
+        description="Hər kateqoriya müvafiq şöbəyə yönləndirilir və təxmini həll müddəti ilə bəyan olunur."
       />
 
-      {loading && <PageLoader />}
+      {loading && (
+        <div className="grid gap-4 md:grid-cols-2" aria-hidden>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      )}
       {error && <Alert tone="error">{error}</Alert>}
 
       {data && (
         <div className="grid gap-4 md:grid-cols-2">
           {data.map((category) => (
-            <Card key={category.id} className="flex flex-col p-5">
+            <Card key={category.id} className="flex flex-col p-6 transition duration-300 hover:border-brand-300 hover:shadow-lift">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-base font-semibold text-slate-900">{category.name}</h3>
-                  <p className="mt-0.5 text-xs text-slate-500">{category.departmentName}</p>
+                  <h3 className="display text-base text-ink">{category.name}</h3>
+                  <p className="mt-0.5 text-xs font-medium text-ink/50">{category.departmentName}</p>
                 </div>
-                {!category.active && <Badge className="bg-slate-100 text-slate-500 ring-slate-200">Passiv</Badge>}
+                {!category.active && (
+                  <Badge className="bg-slate-100 text-slate-500 ring-slate-200">Passiv</Badge>
+                )}
               </div>
 
-              <p className="mt-3 flex-1 text-sm text-slate-600">{category.description}</p>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/60">{category.description}</p>
 
-              <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-3 text-xs">
+              <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-ink/6 pt-4 text-xs">
                 <div>
-                  <dt className="text-slate-500">Təxmini həll</dt>
-                  <dd className="mt-0.5 font-semibold text-slate-800">
+                  <dt className="text-ink/45">Təxmini həll</dt>
+                  <dd className="display mt-0.5 text-sm text-ink">
                     {formatHours(category.estimatedResolutionHours)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Açıq şikayət</dt>
-                  <dd className="mt-0.5 font-semibold text-slate-800">{category.openComplaints}</dd>
+                  <dt className="text-ink/45">Açıq şikayət</dt>
+                  <dd className="display mt-0.5 text-sm text-ink tabular-nums">{category.openComplaints}</dd>
                 </div>
               </dl>
 
               {category.contactEmail && (
                 <a
                   href={`mailto:${category.contactEmail}`}
-                  className="mt-3 text-xs font-medium text-brand-700 hover:underline"
+                  className="mt-4 text-xs font-semibold text-brand-700 hover:text-brand-800"
                 >
                   {category.contactEmail}
                 </a>

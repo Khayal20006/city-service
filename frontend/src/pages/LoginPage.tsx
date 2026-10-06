@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ApiError } from '../lib/api'
-import { Alert, Button, Card, Field } from '../components/ui'
+import AuthShell from '../components/AuthShell'
+import { Alert, Button, Field } from '../components/ui'
 
 export default function LoginPage() {
   const { login, user } = useAuth()
@@ -34,59 +35,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md py-6">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Portala daxil olun</h1>
-        <p className="mt-1.5 text-sm text-slate-500">
-          Şikayətlərinizi izləmək üçün hesabınıza girin
-        </p>
-      </div>
-
-      <Card className="p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <Alert tone="error">{error}</Alert>}
-
-          <Field label="İstifadəçi adı">
-            <input
-              className="field-input"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              autoComplete="username"
-              autoFocus
-              required
-              placeholder="aysel"
-            />
-          </Field>
-
-          <Field label="Parol">
-            <input
-              type="password"
-              className="field-input"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
-              required
-              placeholder="••••••••"
-            />
-          </Field>
-
-          <Button type="submit" size="lg" fullWidth loading={submitting}>
-            Daxil ol
-          </Button>
-        </form>
-
-        <p className="mt-5 border-t border-slate-100 pt-5 text-center text-sm text-slate-500">
+    <AuthShell
+      kicker="Giriş"
+      title="Portala daxil olun"
+      subtitle="Şikayətlərinizin və təyinatlarınızın izini brauzerdən izləyin."
+      footer={
+        <>
           Hesabınız yoxdur?{' '}
-          <Link to="/register" className="font-semibold text-brand-700 hover:underline">
+          <Link to="/register" className="font-semibold text-brand-700 hover:text-brand-800">
             Qeydiyyatdan keçin
           </Link>
-        </p>
-      </Card>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <Alert tone="error">{error}</Alert>}
 
-      <div className="mt-5 rounded-xl bg-slate-100 px-4 py-3 text-xs text-slate-500">
-        <p className="font-semibold text-slate-600">Demo hesabları</p>
-        <p className="mt-1">Administrator: <code className="font-mono">admin</code> / Admin123!</p>
+        <Field label="İstifadəçi adı">
+          <input
+            className="field-input"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
+            autoFocus
+            required
+            placeholder="aysel"
+          />
+        </Field>
+
+        <Field label="Parol">
+          <input
+            type="password"
+            className="field-input"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
+            required
+            placeholder="••••••••"
+          />
+        </Field>
+
+        <Button type="submit" size="lg" fullWidth loading={submitting}>
+          Daxil ol
+          {!submitting && <span aria-hidden>→</span>}
+        </Button>
+      </form>
+
+      <div className="mt-5 rounded-xl bg-ink/4 px-4 py-3 text-xs text-ink/55 ring-1 ring-ink/8">
+        <p className="font-semibold text-ink/70">Demo hesabı</p>
+        <p className="mt-1">
+          Administrator: <code className="font-mono">admin</code> /{' '}
+          <code className="font-mono">Admin123!</code>
+        </p>
       </div>
-    </div>
+    </AuthShell>
   )
 }
