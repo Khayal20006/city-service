@@ -6,8 +6,10 @@ import com.example.cityservice.model.Complaint;
 import com.example.cityservice.model.User;
 import com.example.cityservice.repository.UserRepository;
 import com.example.cityservice.security.AppUserDetails;
+import com.example.cityservice.security.JwtService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,19 @@ public class CurrentUserService {
         if (authentication.getPrincipal() instanceof AppUserDetails details) {
             return userRepository.findById(details.getId())
                     .orElseThrow(() -> ResourceNotFoundException.of("İstifadəçi", details.getId()));
+        }
+        if (authentication.getPrincipal() instanceof Jwt jwt) {
+            long id = -1L;
+            Object raw = jwt.getClaim(JwtService.CLAIM_USER_ID);
+            if (raw instanceof Number number) {
+                id = number.longValue();
+            }
+            if (id <= 0) {
+                throw new ForbiddenException("Token-də istifadəçi identifikatoru yoxdur");
+            }
+            final long finalId = id;
+            return userRepository.findById(finalId)
+                    .orElseThrow(() -> ResourceNotFoundException.of("İstifadəçi", finalId));
         }
         throw new ForbiddenException("İstifadəçi kimliyi tələb olunur");
     }
