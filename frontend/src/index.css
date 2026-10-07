@@ -2,8 +2,8 @@
 @import 'leaflet/dist/leaflet.css';
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Karla', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
   --color-paper: #f4f2ec;
   --color-parchment: #fbfaf6;
@@ -67,6 +67,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-size: 17px;
   }
 
   body {
@@ -134,6 +135,140 @@
 .leaflet-container {
   @apply h-full w-full rounded-xl bg-parchment font-sans;
   z-index: 0;
+}
+
+/* Pulsing blue dot for the user's current position on leaflet maps. */
+.cur-dot {
+  display: block;
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+.cur-dot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgb(2 132 199 / 0.32);
+  animation: pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.cur-dot-core {
+  position: absolute;
+  inset: 8px;
+  border-radius: 9999px;
+  background: #0284c7;
+  border: 2.5px solid #fff;
+  box-shadow: 0 1px 4px rgb(2 132 199 / 0.5);
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Fine paper grain over everything — the print feel that keeps the UI from looking flat. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* Scroll-reveal: elements fade up when they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Editorial marquee ticker. */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  animation: marquee 36s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(-4deg);
+  }
+}
+.float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+/* Grow-from-left underline used on nav links and text links. */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 1.5px;
+  background: currentColor;
+  transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after,
+.link-underline.is-active::after {
+  right: 0;
+}
+
+/* Category-card hairline that grows on hover. */
+.card-rule {
+  position: relative;
+}
+.card-rule::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-brand-500), var(--color-brand-300));
+  transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-rule:hover::before {
+  right: 0;
 }
 
 @media print {

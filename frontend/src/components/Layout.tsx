@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ROLE_LABELS, initials } from '../lib/format'
-import { BrandMark, Button } from './ui'
+import { Button } from './ui'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -29,13 +29,9 @@ const NAV_ITEMS: NavItem[] = [
 
 function Logo() {
   return (
-    <Link to="/" className="group flex items-center gap-3">
-      <BrandMark />
-      <span className="hidden sm:block">
-        <span className="display block text-lg leading-none text-ink">Şəhər Xidmətləri</span>
-        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/45">
-          Bakı · Portal
-        </span>
+    <Link to="/" className="group inline-flex items-center gap-3">
+      <span className="display block text-lg leading-none text-ink">
+        Şəhər <em className="font-medium text-brand-600">Xidmətləri</em>
       </span>
     </Link>
   )
@@ -70,10 +66,10 @@ export default function Layout() {
   }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `rounded-md px-3 py-2 text-[13px] font-medium tracking-tight transition ${
+    `link-underline rounded-md px-3 py-2 text-[13px] font-medium tracking-tight transition ${
       isActive
-        ? 'bg-ink/5 text-ink'
-        : 'text-ink/60 hover:bg-ink/5 hover:text-ink'
+        ? 'text-ink is-active'
+        : 'text-ink/60 hover:text-ink'
     }`
 
   return (
@@ -83,6 +79,22 @@ export default function Layout() {
           scrolled ? 'shadow-[0_1px_0_rgb(34_29_22/0.1),0_16px_32px_-28px_rgb(34_29_22/0.35)]' : ''
         }`}
       >
+        <div className="border-b border-ink/8">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1.5 sm:px-6">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/40">
+              Bakı Şəhər İcra Hakimiyyəti
+            </span>
+            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/40 md:inline">
+              Bazar – Cümə · 09:00 – 18:00
+            </span>
+            <a
+              href="mailto:destek@city.gov.az"
+              className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-700 transition hover:text-brand-800"
+            >
+              destek@city.gov.az
+            </a>
+          </div>
+        </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
           <Logo />
 
@@ -230,14 +242,25 @@ export default function Layout() {
 
       <footer className="relative mt-14 overflow-hidden bg-ink text-slate-300">
         <div className="dot-grid-light pointer-events-none absolute inset-0 opacity-25" />
-        <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
-          <div className="flex flex-wrap items-start justify-between gap-10">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <div className="flex items-baseline gap-4 border-b border-white/10 pb-8">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-300">
+              ( Bakı )
+            </p>
+            <p className="display text-4xl leading-none text-white sm:text-6xl">
+              Şəhər <em className="font-medium text-brand-400">Xidmətləri</em>
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-start justify-between gap-10 pt-10">
             <div className="max-w-sm">
               <div className="flex items-center gap-3">
-                <BrandMark size="sm" />
-                <span className="display block text-lg text-white">Şəhər Xidmətləri</span>
+                <span className="text-brand-400">•</span>
+                <span className="display block text-lg text-white">
+                  Bir şikayət · bir həll
+                </span>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-400">
+              <p className="mt-4 text-sm leading-relaxed text-white/60">
                 Şikayətinizi onlayn verin, hərəkətlərini izləyin və Bakını birlikdə daha yaxşı edək.
               </p>
             </div>

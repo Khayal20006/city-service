@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { BrandMark, Kicker } from './ui'
+import { Kicker } from './ui'
 
 const POINTS = [
   'Şikayəti xəritədə 10 dəqiqəyə verin',
@@ -34,7 +34,7 @@ export default function AuthShell({
 
           <div className="relative">
             <div className="flex items-center gap-2.5">
-              <BrandMark size="sm" />
+              <span className="inline-block size-1.5 rounded-full bg-brand-400" aria-hidden />
               <span className="display block text-sm text-white">Şəhər Xidmətləri</span>
             </div>
 
@@ -46,7 +46,7 @@ export default function AuthShell({
 
             <ul className="mt-8 space-y-3">
               {POINTS.map((point) => (
-                <li key={point} className="flex items-start gap-2.5 text-sm text-slate-300">
+                <li key={point} className="flex items-start gap-2.5 text-sm text-white/65">
                   <svg
                     viewBox="0 0 24 24"
                     className="mt-0.5 size-4 shrink-0 text-brand-300"
@@ -62,14 +62,16 @@ export default function AuthShell({
             </ul>
           </div>
 
-          <p className="relative mt-10 text-xs leading-relaxed text-slate-500">
+          <p className="relative mt-10 text-xs leading-relaxed text-white/40">
             Portal Bakı şəhərinin infrastruktur xidmətlərini vahid rəqəmsal məkanda birləşdirir.
           </p>
         </aside>
 
         <div className="flex flex-col justify-center p-7 sm:p-10">
           <div className="md:hidden">
-            <BrandMark />
+            <span className="display block text-lg text-ink">
+              Şəhər <em className="font-medium text-brand-600">Xidmətləri</em>
+            </span>
           </div>
 
           <Kicker>{kicker}</Kicker>
