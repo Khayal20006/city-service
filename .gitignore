@@ -13,6 +13,7 @@ application-local.yml
 application-local.yaml
 .env
 .env.*
+!.env.example
 
 ### OS ###
 Thumbs.db
@@ -50,3 +51,6 @@ build/
 node_modules/
 frontend/dist/
 frontend/node_modules/
+
+### Tooling ###
+.qodo/
