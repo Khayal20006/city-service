@@ -175,12 +175,12 @@ export default function AdminCategoriesPage() {
             </Field>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="flex items-center gap-2 text-sm text-ink/60">
             <input
               type="checkbox"
               checked={form.active ?? true}
               onChange={(event) => setForm({ ...form, active: event.target.checked })}
-              className="size-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+              className="size-4 rounded border-ink/25 accent-brand-600"
             />
             Aktiv (vətəndaşlar şikayət verə bilər)
           </label>
@@ -199,23 +199,23 @@ export default function AdminCategoriesPage() {
             <Card key={category.id} className="flex flex-col p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-base font-semibold text-slate-900">{category.name}</h3>
-                  <p className="mt-0.5 text-xs text-slate-500">{category.departmentName}</p>
+                  <h3 className="display text-base text-ink">{category.name}</h3>
+                  <p className="mt-0.5 text-xs text-ink/45">{category.departmentName}</p>
                 </div>
                 <Badge
                   className={
                     category.active
-                      ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                      : 'bg-slate-100 text-slate-500 ring-slate-200'
+                      ? 'bg-emerald-600/10 text-emerald-700 ring-emerald-600/25'
+                      : 'bg-ink/4 text-ink/45 ring-ink/12'
                   }
                 >
                   {category.active ? 'Aktiv' : 'Passiv'}
                 </Badge>
               </div>
 
-              <p className="mt-2 flex-1 text-sm text-slate-600">{category.description}</p>
+              <p className="mt-2 flex-1 text-sm text-ink/55">{category.description}</p>
 
-              <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
+              <div className="mt-3 flex items-center justify-between border-t border-ink/8 pt-3 text-xs text-ink/45">
                 <span>Açıq: {category.openComplaints}</span>
                 <span>~{formatHours(category.estimatedResolutionHours)}</span>
               </div>

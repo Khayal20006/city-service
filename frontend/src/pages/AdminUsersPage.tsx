@@ -103,14 +103,14 @@ export default function AdminUsersPage() {
       {loading && <PageLoader />}
 
       {data && data.content.length === 0 && (
-        <Card className="px-5 py-14 text-center text-sm text-slate-500">İstifadəçi tapılmadı</Card>
+        <Card className="px-5 py-14 text-center text-sm text-ink/50">İstifadəçi tapılmadı</Card>
       )}
 
       {data && data.content.length > 0 && (
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-3xl text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <thead className="border-b border-ink/10 bg-ink/[0.03] text-[11px] uppercase tracking-[0.12em] text-ink/50">
                 <tr>
                   <th className="px-4 py-3 font-semibold">İstifadəçi</th>
                   <th className="px-4 py-3 font-semibold">Email</th>
@@ -120,17 +120,17 @@ export default function AdminUsersPage() {
                   <th className="px-4 py-3 text-right font-semibold">Əməliyyat</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-ink/8">
                 {data.content.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50">
+                  <tr key={item.id} className="transition hover:bg-ink/[0.03]">
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900">{item.fullName || item.username}</p>
-                      <p className="text-xs text-slate-500">@{item.username}</p>
+                      <p className="font-medium text-ink">{item.fullName || item.username}</p>
+                      <p className="text-xs text-ink/45">@{item.username}</p>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{item.email}</td>
+                    <td className="px-4 py-3 text-ink/60">{item.email}</td>
                     <td className="px-4 py-3">
                       <select
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-lg border border-ink/15 bg-white px-2 py-1 text-xs text-ink"
                         value={item.role}
                         disabled={busyId === item.id || item.id === current?.id}
                         onChange={(event) => void changeRole(item, event.target.value as Role)}
@@ -146,14 +146,14 @@ export default function AdminUsersPage() {
                       <Badge
                         className={
                           item.active
-                            ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                            : 'bg-rose-50 text-rose-700 ring-rose-200'
+                            ? 'bg-emerald-600/10 text-emerald-700 ring-emerald-600/25'
+                            : 'bg-rose-600/10 text-rose-700 ring-rose-600/25'
                         }
                       >
                         {item.active ? 'Aktiv' : 'Bloklanıb'}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-500">{formatDate(item.createdAt)}</td>
+                    <td className="px-4 py-3 text-xs text-ink/45">{formatDate(item.createdAt)}</td>
                     <td className="px-4 py-3 text-right">
                       <Button
                         variant={item.active ? 'ghost' : 'secondary'}

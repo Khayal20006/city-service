@@ -116,7 +116,7 @@ export default function StaffMapPage() {
         <>
           <MarkerMap markers={markers} className="h-[560px]" />
           {markers.length === 0 && (
-            <p className="mt-4 text-center text-sm text-slate-500">
+            <p className="mt-4 text-center text-sm text-ink/50">
               Seçilmiş filtrlərə uyğun şikayət tapılmadı.
             </p>
           )}

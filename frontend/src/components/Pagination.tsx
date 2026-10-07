@@ -27,31 +27,31 @@ export default function Pagination({
 }) {
   if (totalPages <= 1) {
     return (
-      <p className="px-1 py-3 text-xs text-slate-500">
-        Cəmi <span className="font-semibold text-slate-700">{totalElements}</span> nəticə
+      <p className="px-1 py-3 text-xs text-ink/45">
+        Cəmi <span className="font-semibold text-ink">{totalElements}</span> nəticə
       </p>
     )
   }
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-3">
-      <p className="text-xs text-slate-500">
-        Cəmi <span className="font-semibold text-slate-700">{totalElements}</span> nəticə · Səhifə{' '}
-        <span className="font-semibold text-slate-700">{page + 1}</span> / {totalPages}
+      <p className="text-xs text-ink/45">
+        Cəmi <span className="font-semibold text-ink">{totalElements}</span> nəticə · Səhifə{' '}
+        <span className="font-semibold text-ink">{page + 1}</span> / {totalPages}
       </p>
       <div className="flex items-center gap-1.5">
         <button
           type="button"
           onClick={() => onChange(page - 1)}
           disabled={page <= 0}
-          className="inline-flex size-8 items-center justify-center rounded-lg text-slate-600 ring-1 ring-slate-300 transition hover:bg-slate-50 disabled:opacity-40"
+          className="inline-flex size-8 items-center justify-center rounded-full text-ink/60 ring-1 ring-ink/15 transition hover:bg-ink/5 hover:text-ink disabled:opacity-35"
           aria-label="Əvvəlki səhifə"
         >
           <ChevronLeft className="size-4" />
         </button>
         {pageNumbers(page, totalPages).map((item, index) =>
           item === null ? (
-            <span key={`gap-${index}`} className="px-1 text-xs text-slate-400">
+            <span key={`gap-${index}`} className="px-1 text-xs text-ink/40">
               …
             </span>
           ) : (
@@ -59,10 +59,10 @@ export default function Pagination({
               key={item}
               type="button"
               onClick={() => onChange(item)}
-              className={`size-8 rounded-lg text-sm font-medium transition ${
+              className={`size-8 rounded-full text-sm font-medium transition ${
                 item === page
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'text-slate-600 ring-1 ring-slate-300 hover:bg-slate-50'
+                  ? 'bg-ink text-parchment shadow-card'
+                  : 'text-ink/60 ring-1 ring-ink/15 hover:bg-ink/5 hover:text-ink'
               }`}
             >
               {item + 1}
@@ -73,7 +73,7 @@ export default function Pagination({
           type="button"
           onClick={() => onChange(page + 1)}
           disabled={page >= totalPages - 1}
-          className="inline-flex size-8 items-center justify-center rounded-lg text-slate-600 ring-1 ring-slate-300 transition hover:bg-slate-50 disabled:opacity-40"
+          className="inline-flex size-8 items-center justify-center rounded-full text-ink/60 ring-1 ring-ink/15 transition hover:bg-ink/5 hover:text-ink disabled:opacity-35"
           aria-label="Növbəti səhifə"
         >
           <ChevronRight className="size-4" />

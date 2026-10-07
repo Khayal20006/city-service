@@ -52,8 +52,8 @@ export default function MyMapPage() {
       {markers.length > 0 && (
         <>
           <MarkerMap markers={markers} className="h-[520px]" />
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-            <span className="font-semibold text-slate-600">Vaciblik:</span>
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink/50">
+            <span className="font-semibold text-ink/70">Vaciblik:</span>
             <Legend color="#64748b" label="Aşağı" />
             <Legend color="#0ea5e9" label="Normal" />
             <Legend color="#f97316" label="Yüksək" />

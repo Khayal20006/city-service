@@ -39,40 +39,40 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl animate-fade-in">
       <SectionTitle title="Profil" description="Şəxsi məlumatlarınızı yeniləyin" />
 
       <div className="space-y-5">
         <Card>
-          <div className="flex flex-wrap items-center gap-4 p-5">
-            <span className="flex size-16 items-center justify-center rounded-2xl bg-brand-100 text-xl font-bold text-brand-700">
+          <div className="flex flex-wrap items-center gap-4 p-6">
+            <span className="flex size-16 items-center justify-center rounded-2xl bg-ink text-xl font-semibold text-parchment">
               {(user.fullName || user.username).slice(0, 2).toUpperCase()}
             </span>
             <div>
-              <p className="text-lg font-semibold text-slate-900">{user.fullName || user.username}</p>
-              <p className="text-sm text-slate-500">{user.email}</p>
+              <p className="display text-xl text-ink">{user.fullName || user.username}</p>
+              <p className="mt-0.5 text-sm text-ink/55">{user.email}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                <Badge className="bg-brand-50 text-brand-700 ring-brand-200">
+                <Badge className="bg-brand-600/10 text-brand-700 ring-brand-600/25">
                   {ROLE_LABELS[user.role]}
                 </Badge>
                 <Badge
                   className={
                     user.active
-                      ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                      : 'bg-rose-50 text-rose-700 ring-rose-200'
+                      ? 'bg-emerald-600/10 text-emerald-700 ring-emerald-600/25'
+                      : 'bg-rose-600/10 text-rose-700 ring-rose-600/25'
                   }
                 >
                   {user.active ? 'Aktiv' : 'Bloklanıb'}
                 </Badge>
               </div>
             </div>
-            <p className="ml-auto text-xs text-slate-400">Qeydiyyat: {formatDate(user.createdAt)}</p>
+            <p className="ml-auto text-xs text-ink/45">Qeydiyyat: {formatDate(user.createdAt)}</p>
           </div>
         </Card>
 
         <Card>
           <CardHeader title="Məlumatları redaktə et" />
-          <form onSubmit={handleSubmit} className="space-y-4 p-5">
+          <form onSubmit={handleSubmit} className="space-y-4 p-6">
             {error && <Alert tone="error">{error}</Alert>}
             {success && <Alert tone="success">Məlumatlar yeniləndi</Alert>}
 

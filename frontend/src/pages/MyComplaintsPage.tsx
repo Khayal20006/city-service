@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useFetch } from '../hooks/useFetch'
 import { STATUS_LABELS, STATUS_ORDER, formatRelative } from '../lib/format'
@@ -7,7 +6,16 @@ import type { Complaint, ComplaintStatus, Page } from '../lib/types'
 import { useAuth } from '../context/AuthContext'
 import ComplaintCard from '../components/ComplaintCard'
 import Pagination from '../components/Pagination'
-import { Alert, Card, EmptyState, PageLoader, SectionTitle, StatCard } from '../components/ui'
+import {
+  Alert,
+  Card,
+  EmptyState,
+  FilterPill,
+  LinkButton,
+  PageLoader,
+  SectionTitle,
+  StatCard,
+} from '../components/ui'
 
 export default function MyComplaintsPage() {
   const { user } = useAuth()
@@ -28,20 +36,23 @@ export default function MyComplaintsPage() {
   const openCount = complaints.filter((complaint) => !complaint.closed).length
   const resolvedCount = complaints.filter((complaint) => complaint.status === 'RESOLVED').length
 
+  function select(next: ComplaintStatus | '') {
+    setStatus(next)
+    setPage(0)
+  }
+
   return (
-    <div>
+    <div className="animate-fade-in">
       <SectionTitle
         title="Şikayətlərim"
         description={
           user ? `${user.fullName || user.username} hesabı ilə verilmiş bütün şikayətlər` : undefined
         }
         action={
-          <Link
-            to="/complaints/new"
-            className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
-          >
+          <LinkButton to="/complaints/new">
             Yeni şikayət
-          </Link>
+            <span aria-hidden>→</span>
+          </LinkButton>
         }
       />
 
@@ -52,34 +63,13 @@ export default function MyComplaintsPage() {
       </div>
 
       <Card className="mb-5 flex flex-wrap items-center gap-2 p-3">
-        <button
-          type="button"
-          onClick={() => {
-            setStatus('')
-            setPage(0)
-          }}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-            status === '' ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
-        >
+        <FilterPill active={status === ''} onClick={() => select('')}>
           Hamısı
-        </button>
+        </FilterPill>
         {STATUS_ORDER.map((value) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => {
-              setStatus(value)
-              setPage(0)
-            }}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              status === value
-                ? 'bg-brand-600 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
-          >
+          <FilterPill key={value} active={status === value} onClick={() => select(value)}>
             {STATUS_LABELS[value]}
-          </button>
+          </FilterPill>
         ))}
       </Card>
 
@@ -92,12 +82,10 @@ export default function MyComplaintsPage() {
             title="Hələ şikayət yoxdur"
             description="İlk şikayətinizi verin — problem yerini xəritədə göstərin, biz nəzarət edək."
             action={
-              <Link
-                to="/complaints/new"
-                className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-              >
+              <LinkButton to="/complaints/new">
                 Şikayət ver
-              </Link>
+                <span aria-hidden>→</span>
+              </LinkButton>
             }
           />
         </Card>
@@ -116,7 +104,7 @@ export default function MyComplaintsPage() {
             totalElements={data?.totalElements ?? 0}
             onChange={setPage}
           />
-          <p className="mt-2 text-center text-xs text-slate-400">
+          <p className="mt-2 text-center text-xs text-ink/40">
             Son yeniləmə: {formatRelative(complaints[0]?.updatedAt)}
           </p>
         </>

@@ -37,7 +37,7 @@ export default function CategoriesPage() {
                   <p className="mt-0.5 text-xs font-medium text-ink/50">{category.departmentName}</p>
                 </div>
                 {!category.active && (
-                  <Badge className="bg-slate-100 text-slate-500 ring-slate-200">Passiv</Badge>
+                  <Badge className="bg-ink/4 text-ink/45 ring-ink/12">Passiv</Badge>
                 )}
               </div>
 

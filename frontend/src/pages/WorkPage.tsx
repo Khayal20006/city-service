@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useFetch } from '../hooks/useFetch'
 import { useAuth } from '../context/AuthContext'
@@ -7,7 +6,16 @@ import { STATUS_LABELS, STATUS_ORDER } from '../lib/format'
 import type { Complaint, ComplaintStatus, Page } from '../lib/types'
 import ComplaintCard from '../components/ComplaintCard'
 import Pagination from '../components/Pagination'
-import { Alert, Card, EmptyState, PageLoader, SectionTitle, StatCard } from '../components/ui'
+import {
+  Alert,
+  Card,
+  EmptyState,
+  FilterPill,
+  LinkButton,
+  PageLoader,
+  SectionTitle,
+  StatCard,
+} from '../components/ui'
 
 export default function WorkPage() {
   const { user, isAdmin } = useAuth()
@@ -28,8 +36,13 @@ export default function WorkPage() {
   const pending = complaints.filter((complaint) => complaint.status === 'PENDING').length
   const inProgress = complaints.filter((complaint) => !complaint.closed).length
 
+  function select(next: ComplaintStatus | '') {
+    setStatus(next)
+    setPage(0)
+  }
+
   return (
-    <div>
+    <div className="animate-fade-in">
       <SectionTitle
         title="Təyinatlarım"
         description={
@@ -38,12 +51,9 @@ export default function WorkPage() {
             : undefined
         }
         action={
-          <Link
-            to="/work/map"
-            className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50"
-          >
+          <LinkButton to="/work/map" variant="secondary">
             Xəritədə bax
-          </Link>
+          </LinkButton>
         }
       />
 
@@ -54,34 +64,13 @@ export default function WorkPage() {
       </div>
 
       <Card className="mb-5 flex flex-wrap items-center gap-2 p-3">
-        <button
-          type="button"
-          onClick={() => {
-            setStatus('')
-            setPage(0)
-          }}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-            status === '' ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
-        >
+        <FilterPill active={status === ''} onClick={() => select('')}>
           Hamısı
-        </button>
+        </FilterPill>
         {STATUS_ORDER.map((value) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => {
-              setStatus(value)
-              setPage(0)
-            }}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              status === value
-                ? 'bg-brand-600 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
-          >
+          <FilterPill key={value} active={status === value} onClick={() => select(value)}>
             {STATUS_LABELS[value]}
-          </button>
+          </FilterPill>
         ))}
       </Card>
 
@@ -99,12 +88,10 @@ export default function WorkPage() {
             }
             action={
               isAdmin ? (
-                <Link
-                  to="/statistics"
-                  className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-                >
+                <LinkButton to="/statistics">
                   Statistika
-                </Link>
+                  <span aria-hidden>→</span>
+                </LinkButton>
               ) : undefined
             }
           />

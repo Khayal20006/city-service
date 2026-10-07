@@ -1,4 +1,10 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from 'react'
 import { Link } from 'react-router-dom'
 import {
   PRIORITY_LABELS,
@@ -249,13 +255,15 @@ export function StatCard({
   } as const
 
   return (
-    <div className={`card relative overflow-hidden p-6 ${className}`}>
+    <div
+      className={`card relative overflow-hidden p-6 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift ${className}`}
+    >
       <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-ink/0 via-ink/8 to-ink/0" />
       <div className="flex items-center justify-between gap-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/50">{label}</p>
         <span className={`size-2 rounded-full ${mark[tone]}`} />
       </div>
-      <p className="display mt-4 text-4xl tabular-nums text-ink">{value}</p>
+      <p className="display mt-4 text-5xl tabular-nums text-ink">{value}</p>
       {hint && <p className="mt-2 text-xs text-ink/50">{hint}</p>}
     </div>
   )
@@ -273,13 +281,23 @@ export function SectionTitle({
   action?: ReactNode
 }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        {kicker && <Kicker>{kicker}</Kicker>}
-        <h1 className="display mt-1 text-3xl text-ink sm:text-4xl">{title}</h1>
-        {description && <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/55">{description}</p>}
+    <div className="relative mb-9 overflow-hidden border-b border-ink/10 pb-7">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -left-3 -top-12 hidden select-none font-display text-[9rem] font-semibold leading-none text-ink/[0.05] lg:block"
+      >
+        {title.charAt(0)}
+      </span>
+      <div className="relative flex flex-wrap items-end justify-between gap-4">
+        <div>
+          {kicker && <Kicker>{kicker}</Kicker>}
+          <h1 className="display mt-2 text-4xl leading-none text-ink sm:text-5xl">{title}</h1>
+          {description && (
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink/55">{description}</p>
+          )}
+        </div>
+        {action}
       </div>
-      {action}
     </div>
   )
 }
@@ -307,4 +325,107 @@ export function LinkButton({
       {children}
     </Link>
   )
+}
+
+/** Editorial filter chip used by list pages (status, etc). */
+export function FilterPill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ring-1 ring-inset ${
+        active
+          ? 'bg-ink text-parchment ring-ink'
+          : 'bg-transparent text-ink/55 ring-ink/12 hover:bg-ink/5 hover:text-ink'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+/** Fades content up once it scrolls into view. Default: no delay (0ms). */
+export function Reveal({
+  children,
+  delay = 0,
+  className = '',
+}: {
+  children: ReactNode
+  delay?: number
+  className?: string
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.12 },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${visible ? 'is-visible' : ''} ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  )
+}
+
+/** Counts from 0 to `to` when scrolled into view (respects reduced motion). */
+export function Counter({ to, duration = 1100 }: { to: number; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setValue(to)
+      return
+    }
+    let raf = 0
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return
+        observer.disconnect()
+        const start = performance.now()
+        const tick = (now: number) => {
+          const progress = Math.min(1, (now - start) / duration)
+          const eased = 1 - Math.pow(1 - progress, 3)
+          setValue(Math.round(to * eased))
+          if (progress < 1) raf = requestAnimationFrame(tick)
+        }
+        raf = requestAnimationFrame(tick)
+      },
+      { threshold: 0.4 },
+    )
+    observer.observe(node)
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(raf)
+    }
+  }, [to, duration])
+
+  return <span ref={ref}>{value.toLocaleString('az-AZ')}</span>
 }

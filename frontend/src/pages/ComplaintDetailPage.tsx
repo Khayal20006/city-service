@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../lib/api'
 import { useFetch } from '../hooks/useFetch'
@@ -25,11 +25,11 @@ import {
   StatusBadge,
 } from '../components/ui'
 
-function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
+function DetailRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div>
-      <dt className="text-xs text-slate-500">{label}</dt>
-      <dd className="mt-0.5 text-sm font-medium text-slate-800">{value ?? '—'}</dd>
+      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink/40">{label}</dt>
+      <dd className="mt-1 text-sm font-medium text-ink">{value ?? '—'}</dd>
     </div>
   )
 }
@@ -115,16 +115,20 @@ export default function ComplaintDetailPage() {
   const timelineIndex = STATUS_ORDER.indexOf(complaint.status)
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Link to="/complaints/mine" className="text-sm text-slate-500 hover:text-brand-700">
+    <div className="space-y-5 animate-fade-in">
+      <div className="relative flex flex-wrap items-start justify-between gap-3 border-b border-ink/10 pb-6">
+        <div className="relative">
+          <Link to="/complaints/mine" className="text-sm text-ink/50 transition hover:text-brand-700">
             ← Siyahıya qayıt
           </Link>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{complaint.title}</h1>
-          <p className="mt-1 font-mono text-xs text-brand-700">{complaint.referenceCode}</p>
+          <h1 className="display mt-2 text-4xl leading-tight text-ink sm:text-[44px]">
+            {complaint.title}
+          </h1>
+          <p className="mt-2 font-mono text-xs font-semibold text-brand-700">
+            {complaint.referenceCode}
+          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 pt-6">
           <StatusBadge status={complaint.status} />
           <PriorityBadge priority={complaint.priority} />
         </div>
@@ -137,8 +141,8 @@ export default function ComplaintDetailPage() {
         <div className="space-y-5 lg:col-span-2">
           <Card>
             <CardHeader title="Şikayət məlumatları" subtitle={formatDateTime(complaint.createdAt)} />
-            <div className="space-y-5 p-5">
-              <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">
+            <div className="space-y-5 p-6">
+              <p className="whitespace-pre-line text-sm leading-relaxed text-ink/65">
                 {complaint.description}
               </p>
 
@@ -148,11 +152,11 @@ export default function ComplaintDetailPage() {
                   alt={complaint.title}
                   loading="lazy"
                   decoding="async"
-                  className="max-h-80 w-full rounded-xl object-cover ring-1 ring-slate-200"
+                  className="max-h-80 w-full rounded-xl object-cover ring-1 ring-ink/10"
                 />
               )}
 
-              <dl className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 sm:grid-cols-3">
+              <dl className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5 sm:grid-cols-3">
                 <DetailRow label="Kateqoriya" value={complaint.categoryName} />
                 <DetailRow label="Məsul idarə" value={complaint.departmentName} />
                 <DetailRow label="Vaciblik" value={PRIORITY_LABELS[complaint.priority]} />
@@ -162,9 +166,11 @@ export default function ComplaintDetailPage() {
               </dl>
 
               {complaint.resolutionNote && (
-                <div className="rounded-xl bg-emerald-50 px-4 py-3 ring-1 ring-emerald-200">
-                  <p className="text-xs font-semibold text-emerald-800">Həll qeydi</p>
-                  <p className="mt-1 text-sm text-emerald-900">{complaint.resolutionNote}</p>
+                <div className="rounded-xl bg-emerald-600/5 px-4 py-3.5 ring-1 ring-emerald-600/20">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-800">
+                    Həll qeydi
+                  </p>
+                  <p className="mt-1 text-sm text-emerald-950">{complaint.resolutionNote}</p>
                 </div>
               )}
             </div>
@@ -172,7 +178,7 @@ export default function ComplaintDetailPage() {
 
           <Card>
             <CardHeader title="Xəritə" />
-            <div className="p-5">
+            <div className="p-6">
               <MarkerMap markers={[complaint]} focus={position} />
             </div>
           </Card>
@@ -182,38 +188,40 @@ export default function ComplaintDetailPage() {
               title="Məlumat və şərhlər"
               subtitle={`${comments.length} mesaj`}
             />
-            <div className="space-y-4 p-5">
+            <div className="space-y-4 p-6">
               {comments.length === 0 && (
-                <p className="py-4 text-center text-sm text-slate-500">Hələ mesaj yoxdur.</p>
+                <p className="py-4 text-center text-sm text-ink/45">Hələ mesaj yoxdur.</p>
               )}
 
               {comments.map((comment) => (
                 <div
                   key={comment.id}
                   className={`rounded-xl p-4 ${
-                    comment.internal ? 'bg-amber-50 ring-1 ring-amber-200' : 'bg-slate-50'
+                    comment.internal
+                      ? 'bg-amber-600/5 ring-1 ring-amber-600/20'
+                      : 'bg-ink/3 ring-1 ring-ink/8'
                   }`}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-ink">
                       {comment.author.fullName || comment.author.username}
-                      <span className="ml-2 text-xs font-normal text-slate-500">
+                      <span className="ml-2 text-xs font-normal text-ink/45">
                         {ROLE_LABELS[comment.author.role]}
                       </span>
                     </p>
-                    <span className="text-xs text-slate-400">{formatRelative(comment.createdAt)}</span>
+                    <span className="text-xs text-ink/40">{formatRelative(comment.createdAt)}</span>
                   </div>
 
                   {comment.internal && (
-                    <Badge className="mt-1.5 bg-amber-100 text-amber-800 ring-amber-200">
+                    <Badge className="mt-1.5 bg-amber-600/10 text-amber-800 ring-amber-600/25">
                       Daxili qeyd — vətəndaşa göstərilmir
                     </Badge>
                   )}
 
-                  <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{comment.message}</p>
+                  <p className="mt-2 whitespace-pre-line text-sm text-ink/65">{comment.message}</p>
 
                   {comment.newStatus && (
-                    <p className="mt-2 text-xs text-slate-500">
+                    <p className="mt-2 text-xs text-ink/45">
                       Status: {comment.previousStatus ? `${STATUS_LABELS[comment.previousStatus]} → ` : ''}
                       {STATUS_LABELS[comment.newStatus]}
                     </p>
@@ -221,7 +229,7 @@ export default function ComplaintDetailPage() {
                 </div>
               ))}
 
-              <form onSubmit={handleComment} className="space-y-3 border-t border-slate-100 pt-4">
+              <form onSubmit={handleComment} className="space-y-3 border-t border-ink/8 pt-5">
                 <Field label={isStaff ? 'Qeyd və ya mesaj' : 'Mesaj göndərin'}>
                   <textarea
                     className="field-input min-h-24 resize-y"
@@ -229,7 +237,7 @@ export default function ComplaintDetailPage() {
                     onChange={(event) => setMessage(event.target.value)}
                     placeholder={
                       isStaff
-                        ? 'Daxili qeyd yazın və ya vətəndaşaya cavab verin'
+                        ? 'Daxili qeyd yazın və ya vətəndaşa cavab verin'
                         : 'İdarəyə sual və əlavə məlumat yazın'
                     }
                     maxLength={2000}
@@ -237,12 +245,12 @@ export default function ComplaintDetailPage() {
                 </Field>
 
                 {isStaff && (
-                  <label className="flex items-center gap-2 text-sm text-slate-600">
+                  <label className="flex items-center gap-2 text-sm text-ink/60">
                     <input
                       type="checkbox"
                       checked={internal}
                       onChange={(event) => setInternal(event.target.checked)}
-                      className="size-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                      className="size-4 rounded border-ink/25 accent-brand-600"
                     />
                     Daxili qeyd kimi işlət (vətəndaş görməz)
                   </label>
@@ -259,7 +267,7 @@ export default function ComplaintDetailPage() {
         <div className="space-y-5">
           <Card>
             <CardHeader title="Vətəndaş" />
-            <dl className="space-y-3 p-5 text-sm">
+            <dl className="space-y-3.5 p-6 text-sm">
               <DetailRow label="Ad, soyad" value={complaint.userFullName} />
               <DetailRow label="İstifadəçi adı" value={complaint.userName} />
               <DetailRow
@@ -271,29 +279,30 @@ export default function ComplaintDetailPage() {
 
           <Card>
             <CardHeader title="Status tarixçəsi" />
-            <ol className="space-y-3 p-5">
+            <ol className="space-y-4 p-6">
               {STATUS_ORDER.map((status, index) => {
                 const passed = timelineIndex >= index && !(complaint.closed && index > timelineIndex)
                 const current = complaint.status === status
                 return (
                   <li key={status} className="flex items-center gap-3">
                     <span
-                      className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
+                      className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ring-1 ${
                         current
-                          ? 'bg-brand-600 text-white'
+                          ? 'bg-ink text-parchment ring-ink'
                           : passed
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-slate-100 text-slate-400'
+                            ? 'bg-brand-600/10 text-brand-700 ring-brand-600/25'
+                            : 'bg-transparent text-ink/35 ring-ink/15'
                       }`}
                     >
                       {passed && !current ? '✓' : index + 1}
                     </span>
                     <span
                       className={`text-sm ${
-                        current ? 'font-semibold text-slate-900' : 'text-slate-500'
+                        current ? 'display font-semibold text-ink' : 'text-ink/50'
                       }`}
                     >
                       {STATUS_LABELS[status]}
+                      {current && <span className="ml-2 text-xs font-normal text-brand-700">· hazırda</span>}
                     </span>
                   </li>
                 )
@@ -304,7 +313,7 @@ export default function ComplaintDetailPage() {
           {isStaff && (
             <Card>
               <CardHeader title="İdarəetmə" subtitle="Yalnız personal üçün" />
-              <div className="space-y-4 p-5">
+              <div className="space-y-4 p-6">
                 <form
                   className="space-y-3"
                   onSubmit={(event) => {
@@ -352,7 +361,7 @@ export default function ComplaintDetailPage() {
                 </form>
 
                 <form
-                  className="space-y-3 border-t border-slate-100 pt-4"
+                  className="space-y-3 border-t border-ink/8 pt-4"
                   onSubmit={(event) => {
                     event.preventDefault()
                     if (!assigneeId) return

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import {
   Bar,
   BarChart,
@@ -16,21 +15,21 @@ import { api } from '../lib/api'
 import { useFetch } from '../hooks/useFetch'
 import { PRIORITY_LABELS, STATUS_LABELS, formatDateTime, formatHours } from '../lib/format'
 import type { ComplaintStatus, Priority, Statistics } from '../lib/types'
-import { Alert, Card, CardHeader, PageLoader, SectionTitle, StatCard } from '../components/ui'
+import { Alert, Card, CardHeader, LinkButton, PageLoader, SectionTitle, StatCard } from '../components/ui'
 
 const STATUS_COLORS: Record<ComplaintStatus, string> = {
-  PENDING: '#f59e0b',
-  UNDER_REVIEW: '#0ea5e9',
-  IN_PROGRESS: '#2176ec',
-  RESOLVED: '#10b981',
-  REJECTED: '#f43f5e',
-  CANCELLED: '#64748b',
+  PENDING: '#d97706',
+  UNDER_REVIEW: '#0e93d1',
+  IN_PROGRESS: '#bc5f32',
+  RESOLVED: '#059669',
+  REJECTED: '#e11d48',
+  CANCELLED: '#8a8072',
 }
 
 const PRIORITY_COLORS: Record<Priority, string> = {
-  LOW: '#94a3b8',
+  LOW: '#a8a29e',
   NORMAL: '#0ea5e9',
-  HIGH: '#f97316',
+  HIGH: '#ea580c',
   URGENT: '#e11d48',
 }
 
@@ -68,17 +67,14 @@ export default function StatisticsPage() {
     .slice(0, 12)
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <SectionTitle
         title="Statistika"
         description={`Şikayət axınının icmalı · ${formatDateTime(data.generatedAt)}`}
         action={
-          <Link
-            to="/work/map"
-            className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50"
-          >
+          <LinkButton to="/work/map" variant="secondary">
             Xəritədə bax
-          </Link>
+          </LinkButton>
         }
       />
 
@@ -99,7 +95,7 @@ export default function StatisticsPage() {
           <CardHeader title="Status üzrə paylanma" />
           <div className="h-72 p-4">
             {statusData.length === 0 ? (
-              <p className="pt-24 text-center text-sm text-slate-500">Məlumat yoxdur</p>
+              <p className="pt-24 text-center text-sm text-ink/45">Məlumat yoxdur</p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -130,10 +126,10 @@ export default function StatisticsPage() {
           <div className="h-72 p-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={priorityData} margin={{ top: 8, right: 8, bottom: 8, left: -18 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-                <Tooltip cursor={{ fill: '#f1f5f9' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(34,29,22,0.08)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#4a4238' }} tickLine={false} axisLine={{ stroke: 'rgba(34,29,22,0.15)' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#4a4238' }} tickLine={false} axisLine={false} />
+                <Tooltip cursor={{ fill: 'rgba(34,29,22,0.05)' }} />
                 <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                   {priorityData.map((entry) => (
                     <Cell key={entry.name} fill={entry.color} />
@@ -153,11 +149,11 @@ export default function StatisticsPage() {
                 layout="vertical"
                 margin={{ top: 8, right: 24, bottom: 8, left: 8 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-                <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12 }} />
-                <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 11 }} />
-                <Tooltip cursor={{ fill: '#f1f5f9' }} />
-                <Bar dataKey="value" fill="#2176ec" radius={[0, 8, 8, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(34,29,22,0.08)" horizontal={false} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: '#4a4238' }} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 11, fill: '#4a4238' }} tickLine={false} axisLine={{ stroke: 'rgba(34,29,22,0.15)' }} />
+                <Tooltip cursor={{ fill: 'rgba(34,29,22,0.05)' }} />
+                <Bar dataKey="value" fill="#bc5f32" radius={[0, 8, 8, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -168,12 +164,12 @@ export default function StatisticsPage() {
           <div className="h-80 p-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={districtData} margin={{ top: 8, right: 8, bottom: 8, left: -18 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="name" interval={0} angle={-30} textAnchor="end" height={60} tick={{ fontSize: 10 }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-                <Tooltip cursor={{ fill: '#f1f5f9' }} />
-                <Legend />
-                <Bar dataKey="value" name="Şikayət" fill="#10b981" radius={[8, 8, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(34,29,22,0.08)" vertical={false} />
+                <XAxis dataKey="name" interval={0} angle={-30} textAnchor="end" height={60} tick={{ fontSize: 10, fill: '#4a4238' }} tickLine={false} axisLine={{ stroke: 'rgba(34,29,22,0.15)' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#4a4238' }} tickLine={false} axisLine={false} />
+                <Tooltip cursor={{ fill: 'rgba(34,29,22,0.05)' }} />
+                <Legend wrapperStyle={{ fontSize: 12, color: '#4a4238' }} />
+                <Bar dataKey="value" name="Şikayət" fill="#059669" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
