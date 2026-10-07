@@ -96,7 +96,7 @@ export default function NewComplaintPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-4xl animate-fade-in">
       <SectionTitle
         title="Yeni şikayət"
         description="Problem yerini xəritədə göstərin və məlumatları doldurun — şikayətiniz məsul idarəyə avtomatik yönləndiriləcək."
@@ -106,12 +106,12 @@ export default function NewComplaintPage() {
         {error && <Alert tone="error">{error}</Alert>}
 
         <Card>
-          <CardHeader title="Problem yeri" subtitle="Xəritəyə klikləyin" />
+          <CardHeader title="Problem yeri" subtitle="Xəritəyə klikləyin və ya “Mənim yerim” düyməsini basın" />
           <div className="p-5">
             <LocationPicker
-            value={position}
-            onChange={(next) => setPosition({ lat: next[0], lng: next[1] })}
-          />
+              value={position}
+              onChange={(next) => setPosition({ lat: next[0], lng: next[1] })}
+            />
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <Field label="Rayon">
                 <select
@@ -140,7 +140,7 @@ export default function NewComplaintPage() {
             </div>
 
             {position && (
-              <p className="mt-3 font-mono text-xs text-slate-500">
+              <p className="mt-3 font-mono text-xs text-ink/45">
                 {position.lat.toFixed(6)}, {position.lng.toFixed(6)}
               </p>
             )}
@@ -213,11 +213,11 @@ export default function NewComplaintPage() {
                     const file = event.target.files?.[0]
                     if (file) void handleUpload(file)
                   }}
-                  className="text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0
-                    file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold
-                    file:text-brand-700 hover:file:bg-brand-100"
+                  className="w-full text-sm text-ink/55 file:mr-3 file:rounded-full file:border-0
+                    file:bg-ink file:px-5 file:py-2 file:text-sm file:font-semibold
+                    file:text-parchment file:transition hover:file:bg-brand-700"
                 />
-                {uploading && <span className="text-xs text-slate-500">Yüklənir…</span>}
+                {uploading && <span className="text-xs text-ink/45">Yüklənir…</span>}
               </div>
               {imageUrl && (
                 <div className="mt-3 flex items-center gap-3">
@@ -226,7 +226,7 @@ export default function NewComplaintPage() {
                     alt="Yüklənmiş şəkil"
                     loading="lazy"
                     decoding="async"
-                    className="size-20 rounded-xl object-cover ring-1 ring-slate-200"
+                    className="size-20 rounded-xl object-cover ring-1 ring-ink/10"
                   />
                   <Button type="button" variant="ghost" size="sm" onClick={() => setImageUrl(null)}>
                     Sil
